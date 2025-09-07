@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX := g++
-# CXXFLAGS := -Wall -Wextra -std=c++17 -Iinclude
+CXXFLAGS := -Wall -Wextra -std=c++17 -Iinclude
 
 # Directories
 SRC_DIR := src
@@ -16,11 +16,11 @@ all: $(BIN)
 
 # Link objects into final binary
 $(BIN): $(OBJ)
-	$(CXX) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Compile each .cpp into .o
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
-	$(CXX) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Create build directory if it doesn’t exist
 $(BUILD_DIR):
