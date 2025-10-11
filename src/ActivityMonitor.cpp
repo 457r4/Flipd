@@ -1,6 +1,6 @@
 #include "ActivityMonitor.hpp"
-#include "globals.h"
-#include "utils.h"
+#include "globals.hpp"
+#include "utils.hpp"
 #include <ctime>
 #include <string>
 #include <thread>
