@@ -12,7 +12,7 @@ std::string date() {
   time_t timestamp = time(NULL);
   struct tm datetime = *localtime(&timestamp);
   char output[50];
-  strftime(output, 50, "%y/%m/%d %H:%M:%S", &datetime);
+  strftime(output, 50, "%d/%m/%y %H:%M:%S", &datetime);
   return output;
 }
 
