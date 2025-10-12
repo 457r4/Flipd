@@ -19,7 +19,7 @@ void TUI::start() {
 
   start_color();
   use_default_colors();
-  init_pair(1, COLOR_BLUE, -1);
+  init_pair(1, COLOR_GREEN, -1);
 
   printw("Flipd");
   refresh();
@@ -35,9 +35,18 @@ void TUI::start() {
   thread th(&Time::run, t);
   th.detach();
 
-  wattroff(container, COLOR_PAIR(1));
+  int ch;
+  bool running = true;
 
-  getch();
+  while (running) {
+    ch = getch();
+    switch (ch) {
+      case 'q':
+        running = false;
+        break;
+    }
+  }
+  // getch();
   endwin();
 }
 
