@@ -57,13 +57,13 @@ vector<int> *Time::decomposeTime(int s) {
 }
 
 void Time::update(int s) {
-  vector<int> componenta = *decomposeTime(s);
+  vector<int> components = *decomposeTime(s);
   string content;
   for (int ln = 0; ln < 5; ln++) {
     content = "";
-    for (int i = 0; i < componenta.size(); i++) {
-      content += digits_[componenta[i]][ln];
-      if (i != componenta.size() - 1)
+    for (int i = 0; i < components.size(); i++) {
+      content += digits_[components[i]][ln];
+      if (i != components.size() - 1)
         content += " ";
     }
     int padSize =
