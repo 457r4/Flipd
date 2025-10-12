@@ -1,5 +1,5 @@
-#include "TUI.hpp"
-#include "Time.hpp"
+#include "ui/TUI.hpp"
+#include "core/Time.hpp"
 #include <ncurses.h>
 #include <thread>
 #include <unistd.h>
@@ -28,7 +28,7 @@ void TUI::start() {
   container = newwin(5, width, (height - 5) / 2, 0);
   wattron(container, COLOR_PAIR(1));
 
-  thread th(Time::run);
+  thread th(Time::run, 15);
   th.detach();
 
   int ch;

@@ -1,7 +1,6 @@
-#include "ActivityMonitor.hpp"
-#include "globals.hpp"
-#include "utils.hpp"
-#include <ctime>
+#include "core/ActivityMonitor.hpp"
+#include "utils/globals.hpp"
+#include "utils/logs.hpp"
 #include <string>
 #include <thread>
 #include <unistd.h>

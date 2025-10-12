@@ -1,6 +1,6 @@
-#include "Time.hpp"
-#include "TUI.hpp"
-#include "globals.hpp"
+#include "core/Time.hpp"
+#include "ui/TUI.hpp"
+#include "utils/globals.hpp"
 #include <clocale>
 #include <string>
 #include <unistd.h>
@@ -10,24 +10,30 @@
 using namespace std;
 
 const string Time::zero_[5] = {"███████", "██   ██", "██   ██", "██   ██",
-                              "███████"};
+                               "███████"};
 const string Time::one_[5] = {"██", "██", "██", "██", "██"};
 const string Time::two_[5] = {"██████", "    ██", "██████", "██    ", "██████"};
 const string Time::three_[5] = {"██████", "    ██", "██████", "    ██",
+                                "██████"};
+const string Time::four_[5] = {"██  ██", "██  ██", "██████", "    ██",
+                               "    ██"};
+const string Time::five_[5] = {"██████", "██    ", "██████", "    ██",
                                "██████"};
-const string Time::four_[5] = {"██  ██", "██  ██", "██████", "    ██", "    ██"};
-const string Time::five_[5] = {"██████", "██    ", "██████", "    ██", "██████"};
 const string Time::six_[5] = {"██████", "██    ", "██████", "██  ██", "██████"};
 const string Time::seven_[5] = {"██████", "    ██", "    ██", "    ██",
-                               "    ██"};
+                                "    ██"};
 const string Time::eight_[5] = {"██████", "██  ██", "██████", "██  ██",
-                               "██████"};
-const string Time::nine_[5] = {"██████", "██  ██", "██████", "    ██", "    ██"};
+                                "██████"};
+const string Time::nine_[5] = {"██████", "██  ██", "██████", "    ██",
+                               "    ██"};
 const string Time::dots_[5] = {"  ", "██", "  ", "██", "  "};
 
-const string *Time::digits_[11] = {
-    Time::zero_, Time::one_,   Time::two_,   Time::three_, Time::four_, Time::five_,
-    Time::six_,  Time::seven_, Time::eight_, Time::nine_,  Time::dots_};
+const string *Time::digits_[11] = {Time::zero_,  Time::one_,   Time::two_,
+                                   Time::three_, Time::four_,  Time::five_,
+                                   Time::six_,   Time::seven_, Time::eight_,
+                                   Time::nine_,  Time::dots_};
+
+string Time::time_[5];
 
 vector<int> *Time::decomposeTime(int s) {
   vector<int> *d = new vector<int>;

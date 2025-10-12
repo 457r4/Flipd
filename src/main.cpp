@@ -1,5 +1,5 @@
-#include "ActivityMonitor.hpp"
-#include "TUI.hpp"
+#include "core/ActivityMonitor.hpp"
+#include "ui/TUI.hpp"
 #include <thread>
 
 int main(int argc, char *argv[]) {

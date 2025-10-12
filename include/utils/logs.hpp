@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef LOGS_H
+#define LOGS_H
 
 #include <string>
 
@@ -7,4 +7,4 @@ using namespace std;
 
 extern void log(string message);
 
-#endif // !UTILS_H
+#endif // !LOGS_H
