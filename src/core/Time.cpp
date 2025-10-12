@@ -51,8 +51,8 @@ vector<int> *Time::decomposeTime(int s) {
     if (i != 2)
       d->push_back(10);
   }
-  if (d->front() == 0)
-    d->erase(d->begin());
+  // if (d->front() == 0)
+  //   d->erase(d->begin());
   return d;
 }
 
