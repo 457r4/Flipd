@@ -14,8 +14,12 @@ void ActivityMonitor::countdown() {
   for (i = 15; i > 0 && !foreground_; i--) {
     sleep(1);
   }
-  (!i) ? system("termux-notification -c 'terminating...'")
-       : system("termux-notification -c 'you returned :)'");
+  if (i != 0)
+    system("termux-notification -c 'you returned :)'");
+  else {
+    session_active = false;
+    system("termux-notification -c 'terminating...'");
+  }
 }
 
 void ActivityMonitor::monitor() {
