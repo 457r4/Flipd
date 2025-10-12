@@ -8,12 +8,12 @@
 
 using namespace std;
 
-bool ActivityMonitor::foreground = true;
+bool ActivityMonitor::foreground_ = true;
 
 void ActivityMonitor::countdown() {
   system("termux-notification -c 'return, or else...'");
   int i;
-  for (i = 15; i > 0 && !foreground; i--) {
+  for (i = 15; i > 0 && !foreground_; i--) {
     sleep(1);
   }
   if (i != 0)
@@ -38,12 +38,12 @@ void ActivityMonitor::monitor() {
     if (line.find("true") != string::npos) {
       log("Termux in the background");
       system("termux-vibrate -f");
-      foreground = false;
+      foreground_ = false;
       thread th(countdown);
       th.detach();
     } else if (line.find("false") != string::npos) {
       log("Termux in the foreground");
-      foreground = true;
+      foreground_ = true;
     } else {
       log("No info about Termux state");
     }
