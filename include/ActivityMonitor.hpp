@@ -8,6 +8,8 @@ public:
   static void monitor();
 
 private:
+  static bool foreground;
+
   static void countdown();
 };
 

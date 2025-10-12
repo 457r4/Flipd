@@ -3,12 +3,10 @@
 #include <ncurses.h>
 #include <thread>
 #include <unistd.h>
-#include <iostream>
 
 using namespace std;
 
 WINDOW *container;
-Time *t;
 
 void TUI::start() {
 
@@ -24,15 +22,13 @@ void TUI::start() {
   printw("Flipd");
   refresh();
 
-  int height, width;
-  getmaxyx(stdscr, height, width);
+  int height = getHeight();
+  int width = getWidth();
 
   container = newwin(5, width, (height - 5) / 2, 0);
   wattron(container, COLOR_PAIR(1));
 
-  t = new Time(21);
-  refreshTime();
-  thread th(&Time::run, t);
+  thread th(Time::run);
   th.detach();
 
   int ch;
@@ -41,12 +37,11 @@ void TUI::start() {
   while (running) {
     ch = getch();
     switch (ch) {
-      case 'q':
-        running = false;
-        break;
+    case 'q':
+      running = false;
+      break;
     }
   }
-  // getch();
   endwin();
 }
 
@@ -54,7 +49,7 @@ void TUI::refreshTime() {
   for (int i = 0; i < 5; i++) {
     wmove(container, i, 0);
     wclrtoeol(container);
-    mvwprintw(container, i, 0, "%s", t->time[i].c_str());
+    mvwprintw(container, i, 0, "%s", Time::time_[i].c_str());
   }
   wrefresh(container);
 }

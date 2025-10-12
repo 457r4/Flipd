@@ -7,15 +7,28 @@ using namespace std;
 
 class Time {
 public:
-  string *time = new string[5];
+  Time() = delete;
 
-  Time(int m);
-  void update(int s);
-  void run();
-  ~Time();
+  static string time_[5];
+
+  static void run(int m);
 
 private:
-  int m;
+  static const string zero_[5];
+  static const string one_[5];
+  static const string two_[5];
+  static const string three_[5];
+  static const string four_[5];
+  static const string five_[5];
+  static const string six_[5];
+  static const string seven_[5];
+  static const string eight_[5];
+  static const string nine_[5];
+  static const string dots_[5];
+  static const string *digits_[11];
+
+  static vector<int> *decomposeTime(int s);
+  static void update(int s);
 };
 
-#endif // !CLOCK_H
+#endif // !TIME_H

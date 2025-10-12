@@ -3,29 +3,33 @@
 #include "globals.hpp"
 #include <clocale>
 #include <string>
-#include <iostream>
 #include <unistd.h>
 #include <utf8cpp/utf8.h>
 #include <vector>
 
 using namespace std;
 
-const string zero[5] = {"███████", "██   ██", "██   ██", "██   ██", "███████"};
-const string one[5] = {"██", "██", "██", "██", "██"};
-const string two[5] = {"██████", "    ██", "██████", "██    ", "██████"};
-const string three[5] = {"██████", "    ██", "██████", "    ██", "██████"};
-const string four[5] = {"██  ██", "██  ██", "██████", "    ██", "    ██"};
-const string five[5] = {"██████", "██    ", "██████", "    ██", "██████"};
-const string six[5] = {"██████", "██    ", "██████", "██  ██", "██████"};
-const string seven[5] = {"██████", "    ██", "    ██", "    ██", "    ██"};
-const string eight[5] = {"██████", "██  ██", "██████", "██  ██", "██████"};
-const string nine[5] = {"██████", "██  ██", "██████", "    ██", "    ██"};
-const string dots[5] = {"  ", "██", "  ", "██", "  "};
+const string Time::zero_[5] = {"███████", "██   ██", "██   ██", "██   ██",
+                              "███████"};
+const string Time::one_[5] = {"██", "██", "██", "██", "██"};
+const string Time::two_[5] = {"██████", "    ██", "██████", "██    ", "██████"};
+const string Time::three_[5] = {"██████", "    ██", "██████", "    ██",
+                               "██████"};
+const string Time::four_[5] = {"██  ██", "██  ██", "██████", "    ██", "    ██"};
+const string Time::five_[5] = {"██████", "██    ", "██████", "    ██", "██████"};
+const string Time::six_[5] = {"██████", "██    ", "██████", "██  ██", "██████"};
+const string Time::seven_[5] = {"██████", "    ██", "    ██", "    ██",
+                               "    ██"};
+const string Time::eight_[5] = {"██████", "██  ██", "██████", "██  ██",
+                               "██████"};
+const string Time::nine_[5] = {"██████", "██  ██", "██████", "    ██", "    ██"};
+const string Time::dots_[5] = {"  ", "██", "  ", "██", "  "};
 
-const string *digits[11] = {zero, one,   two,   three, four, five,
-                            six,  seven, eight, nine,  dots};
+const string *Time::digits_[11] = {
+    Time::zero_, Time::one_,   Time::two_,   Time::three_, Time::four_, Time::five_,
+    Time::six_,  Time::seven_, Time::eight_, Time::nine_,  Time::dots_};
 
-vector<int> *decomposeTime(int s) {
+vector<int> *Time::decomposeTime(int s) {
   vector<int> *d = new vector<int>;
   int components[3] = {0, 0, 0};
   components[2] = s % 60;
@@ -47,33 +51,26 @@ vector<int> *decomposeTime(int s) {
 }
 
 void Time::update(int s) {
-  delete[] time;
-  time = new string[5];
   vector<int> componenta = *decomposeTime(s);
   string content;
   for (int ln = 0; ln < 5; ln++) {
     content = "";
     for (int i = 0; i < componenta.size(); i++) {
-      content += digits[componenta[i]][ln];
+      content += digits_[componenta[i]][ln];
       if (i != componenta.size() - 1)
         content += " ";
     }
     int padSize =
         (TUI::getWidth() - utf8::distance(content.begin(), content.end())) / 2;
     string padding(padSize, ' ');
-    time[ln] = padding + content;
+    time_[ln] = padding + content;
   }
 }
 
-void Time::run() {
+void Time::run(int m) {
   for (int s = m * 60; s >= 0 && session_active; s--) {
     update(s);
     TUI::refreshTime();
     sleep(1);
   }
-}
-
-Time::Time(int m) {
-  this->m = m;
-  update(m * 60);
 }
