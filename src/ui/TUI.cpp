@@ -22,17 +22,7 @@ void TUI::start() {
   use_default_colors();
   init_pair(1, COLOR_GREEN, -1);
 
-  int height = getHeight();
-  int width = getWidth();
-
-  attron(A_BOLD);
-  mvprintw(1, (getWidth() - 5) / 2, "Flipd\n");
-  attroff(A_BOLD);
-  string title = " " + Session::getSubject();
-  mvprintw(2, (getWidth() - utf8::distance(title.begin(), title.end())) / 2, "%s", title.c_str());
-  refresh();
-
-  container = newwin(5, width, (height - 5) / 2, 0);
+  drawLayout();
   wattron(container, COLOR_PAIR(1));
   thread th(Time::run, Session::getDuration());
   th.detach();
@@ -51,9 +41,34 @@ void TUI::start() {
     case 'q':
       running = false;
       break;
+    case KEY_RESIZE:
+      TUI::drawLayout();
+      break;
     }
   }
   endwin();
+}
+
+void TUI::drawLayout() {
+  wclear(stdscr);
+  refresh();
+
+  attron(A_BOLD);
+  mvprintw(1, (getWidth() - 5) / 2, "Flipd\n");
+  attroff(A_BOLD);
+  string title = " " + Session::getSubject();
+  mvprintw(2, (getWidth() - utf8::distance(title.begin(), title.end())) / 2,
+           "%s", title.c_str());
+  refresh();
+
+  if (container == nullptr) {
+    container = newwin(5, getWidth(), (getHeight() - 5) / 2, 0);
+    wattron(container, COLOR_PAIR(1));
+  } else {
+    wresize(container, 5, getWidth());
+    mvwin(container, (getHeight() - 5) / 2, 0);
+  }
+  wrefresh(container);
 }
 
 void TUI::refreshTimeDrawing() {

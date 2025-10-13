@@ -11,6 +11,7 @@ public:
   static int getWidth();
 
 private:
+  static void drawLayout();
 };
 
 #endif // !TUI
