@@ -11,7 +11,7 @@ using namespace std;
 
 const string Time::zero_[5] = {"███████", "██   ██", "██   ██", "██   ██",
                                "███████"};
-const string Time::one_[5] = {"██", "██", "██", "██", "██"};
+const string Time::one_[5] = {"  ██  ", "  ██  ", "  ██  ", "  ██  ", "  ██  "};
 const string Time::two_[5] = {"██████", "    ██", "██████", "██    ", "██████"};
 const string Time::three_[5] = {"██████", "    ██", "██████", "    ██",
                                 "██████"};

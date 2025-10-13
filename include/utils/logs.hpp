@@ -3,8 +3,6 @@
 
 #include <string>
 
-using namespace std;
-
-extern void log(string message);
+extern void log(std::string message);
 
 #endif // !LOGS_H
