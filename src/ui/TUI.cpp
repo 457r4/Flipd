@@ -20,7 +20,7 @@ void TUI::start() {
 
   start_color();
   use_default_colors();
-  init_pair(1, COLOR_GREEN, -1);
+  init_pair(1, COLOR_RED, -1);
 
   drawLayout();
   wattron(container, COLOR_PAIR(1));
