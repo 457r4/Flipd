@@ -56,7 +56,7 @@ vector<int> *Time::decomposeTime(int s) {
   return d;
 }
 
-void Time::update(int s) {
+void Time::updateDrawing(int s) {
   vector<int> components = *decomposeTime(s);
   string content;
   for (int ln = 0; ln < 5; ln++) {
@@ -75,8 +75,8 @@ void Time::update(int s) {
 
 void Time::run(int m) {
   for (int s = m * 60; s >= 0 && session_active; s--) {
-    update(s);
-    TUI::refreshTime();
+    updateDrawing(s);
+    TUI::refreshTimeDrawing();
     sleep(1);
   }
 }

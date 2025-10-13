@@ -28,7 +28,7 @@ void TUI::start() {
   container = newwin(5, width, (height - 5) / 2, 0);
   wattron(container, COLOR_PAIR(1));
 
-  thread th(Time::run, 15);
+  thread th(Time::run, 1);
   th.detach();
 
   int ch;
@@ -45,7 +45,7 @@ void TUI::start() {
   endwin();
 }
 
-void TUI::refreshTime() {
+void TUI::refreshTimeDrawing() {
   for (int i = 0; i < 5; i++) {
     wmove(container, i, 0);
     wclrtoeol(container);

@@ -28,7 +28,7 @@ private:
   static const string *digits_[11];
 
   static vector<int> *decomposeTime(int s);
-  static void update(int s);
+  static void updateDrawing(int s);
 };
 
 #endif // !TIME_H

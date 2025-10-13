@@ -6,7 +6,7 @@ public:
   TUI() = delete;
 
   static void start();
-  static void refreshTime();
+  static void refreshTimeDrawing();
   static int getHeight();
   static int getWidth();
 
