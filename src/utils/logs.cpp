@@ -8,14 +8,6 @@ std::filesystem::path LOG_DIR =
     "/data/data/com.termux/files/home/.local/share/flipd";
 std::filesystem::path LOG_REG = LOG_DIR / "flipd.log";
 
-std::string date() {
-  time_t timestamp = time(NULL);
-  struct tm datetime = *localtime(&timestamp);
-  char output[50];
-  strftime(output, 50, "%d/%m/%y %H:%M:%S", &datetime);
-  return output;
-}
-
 void checkLogExistence() {
   if (!std::filesystem::exists(LOG_DIR)) {
     std::filesystem::create_directories(LOG_DIR);
@@ -23,6 +15,14 @@ void checkLogExistence() {
   if (!std::filesystem::exists(LOG_REG)) {
     std::ofstream ofs(LOG_REG);
   }
+}
+
+std::string date() {
+  time_t timestamp = time(NULL);
+  struct tm datetime = *localtime(&timestamp);
+  char output[50];
+  strftime(output, 50, "%d/%m/%y %H:%M:%S", &datetime);
+  return output;
 }
 
 void log(std::string message) {
