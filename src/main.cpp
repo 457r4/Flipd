@@ -1,4 +1,5 @@
 #include "core/ActivityMonitor.hpp"
+#include "data/Database.hpp"
 #include "core/Session.hpp"
 #include "libs/cxxopts.hpp"
 #include "ui/TUI.hpp"
@@ -35,6 +36,8 @@ int main(int argc, char *argv[]) {
   if (result.count("duration")) {
     Session::setDuration(result["duration"].as<int>());
   }
+
+  Database::open();
 
   thread th(ActivityMonitor::monitor);
   th.detach();
