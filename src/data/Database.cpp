@@ -39,7 +39,7 @@ void Database::open() {
                              "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                              "subject_id INTEGER NOT NULL,"
                              "date INTEGER NOT NULL,"
-                             "goal INTEGER NOT NULL,"
+                             "goal_duration INTEGER NOT NULL,"
                              "duration INTEGER NOT NULL,"
                              "FOREIGN KEY(subject_id) REFERENCES Subjects(id));";
   char *errMsg = nullptr;

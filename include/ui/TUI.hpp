@@ -1,17 +1,20 @@
 #ifndef TUI_H
 #define TUI_H
 
+#include "core/Session.hpp"
 class TUI {
 public:
-  TUI() = delete;
+  TUI(Session session);
+  ~TUI() = default;
 
-  static void start();
-  static void refreshTimeDrawing();
-  static int getHeight();
-  static int getWidth();
+  void start();
+  void refreshTimeDrawing();
+  int getHeight();
+  int getWidth();
 
 private:
-  static void drawLayout();
+  Session session_;
+  void drawLayout();
 };
 
 #endif // !TUI

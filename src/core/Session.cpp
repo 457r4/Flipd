@@ -1,35 +1,16 @@
 #include "core/Session.hpp"
-#include <string>
+#include "core/Subject.hpp"
 
-using namespace std;
+bool Session::getActiveStatus() const { return this->active_; }
+Subject Session::getSubject() const { return this->subject_; }
+int Session::getDate() const { return this->date_; }
+int Session::getGoalDuration() const { return this->goal_duration_; }
+int Session::getDuration() const { return this->duration_; }
 
-bool Session::active_ = true;
-std::string Session::subject_ = "";
-std::string Session::color_ = "";
-int Session::duration_ = 45;
-
-bool Session::getActiveStatus() {
-  return active_;
+void Session::setActiveStatus(bool active) { this->active_ = active; }
+void Session::setSubject(Subject subject) { this->subject_ = subject; }
+void Session::setDate(int date) { this->date_ = date; }
+void Session::setGoalDuration(int goal_duration) {
+  this->goal_duration_ = goal_duration;
 }
-std::string Session::getSubject() {
-  return subject_;
-}
-std::string Session::getColor() {
-  return color_;
-}
-int Session::getDuration() {
-  return duration_;
-}
-
-void Session::setActiveStatus(bool active) {
-  Session::active_ = active;
-}
-void Session::setSubject(std::string subject) {
-  Session::subject_ = subject;
-}
-void Session::setColor(std::string color) {
-  Session::color_ = color;
-}
-void Session::setDuration(int duration) {
-  Session::duration_ = duration;
-}
+void Session::setDuration(int duration) { this->duration_ = duration; }

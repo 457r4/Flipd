@@ -1,26 +1,31 @@
 #ifndef SESSION_H
 #define SESSION_H
 
-#include <string>
+#include "core/Subject.hpp"
 
 class Session {
 public:
-  Session() = delete;
+  Session() = default;
+  ~Session() = default;
 
-  static bool getActiveStatus();
-  static std::string getSubject();
-  static std::string getColor();
-  static int getDuration();
-  static void setActiveStatus(bool active);
-  static void setSubject(std::string subject);
-  static void setColor(std::string color);
-  static void setDuration(int duration);
+  bool getActiveStatus() const;
+  Subject getSubject() const;
+  int getDate() const;
+  int getGoalDuration() const;
+  int getDuration() const;
+
+  void setActiveStatus(bool active);
+  void setSubject(Subject subject);
+  void setDate(int date);
+  void setGoalDuration(int goal_duration);
+  void setDuration(int duration);
 
 private:
-  static bool active_;
-  static std::string subject_;
-  static std::string color_;
-  static int duration_;
+  bool active_ = true;
+  Subject subject_;
+  int date_ = 0;
+  int goal_duration_ = 45;
+  int duration_ = 0;
 };
 
 #endif // !SESSION_H

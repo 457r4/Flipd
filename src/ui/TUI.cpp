@@ -11,6 +11,10 @@ using namespace std;
 WINDOW *container;
 WINDOW *popup;
 
+TUI::TUI(Session session) {
+  this->session_ = session;
+}
+
 void TUI::start() {
 
   initscr();
@@ -24,7 +28,7 @@ void TUI::start() {
 
   drawLayout();
   wattron(container, COLOR_PAIR(1));
-  thread th(Time::run, Session::getDuration());
+  thread th(Time::run, session_.getGoalDuration());
   th.detach();
 
   // popup = newwin(40, 40, 2, 2);
@@ -56,7 +60,7 @@ void TUI::drawLayout() {
   attron(A_BOLD);
   mvprintw(1, (getWidth() - 5) / 2, "Flipd\n");
   attroff(A_BOLD);
-  string title = " " + Session::getSubject();
+  string title = " " + session_.getSubject().getName();
   mvprintw(2, (getWidth() - utf8::distance(title.begin(), title.end())) / 2,
            "%s", title.c_str());
   refresh();

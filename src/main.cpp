@@ -12,12 +12,13 @@ int main(int argc, char *argv[]) {
 
   cxxopts::Options options("Flipd", "Improve your study habits");
   options.add_options()("h,help", "Print this message")(
-      "add", "Add a new subject", cxxopts::value<string>())(
-      "under", "Link a subject to a semester (must be used with add)",
-      cxxopts::value<string>())("subject", "Subject name",
-                                     cxxopts::value<string>())(
-      "duration", "Study session duration in minutes", cxxopts::value<int>())(
-      "color", "Give a color to the subject", cxxopts::value<string>());
+      "add", "Create a new subject, must belong to a semester. Cannot start a session with add", cxxopts::value<string>())(
+      "subject", "Latest semester subject will be used, use this option to change or set the subject's color, weekly goal or the duration of a session about to start", cxxopts::value<string>())(
+      "semester", "Create a new semester (will group subjects)",
+      cxxopts::value<string>())(
+      "color", "Give a color to the subject (white, green, red, blue, yellow, magenta, cyan, black)", cxxopts::value<string>())(
+      "goal", "Set a weekly goal in hours for this subject", cxxopts::value<int>())(
+      "duration", "Study session duration in minutes", cxxopts::value<int>());
   options.parse_positional({"subject", "duration"});
 
   auto result = options.parse(argc, argv);
@@ -27,21 +28,63 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
+  Session session;
+  Subject subject;
+
+  if (result.count("semester")) {
+    // Add semester to database
+    return 0;
+  }
+
+  // Improve system of verification of semester, color and goal
+
+  if (result.count("add")) {
+    if (!result.count("semester")) {
+      cerr << "You must provide a semester" << endl;
+      return 1;
+    }
+    // Verify semester existence
+    subject.setSemester(result["semester"].as<string>());
+    if (result.count("color")) subject.setColor(result["color"].as<string>());
+    if (result.count("goal")) subject.setGoal(result["goal"].as<int>());
+    // Send the Subject to the database 
+    return 0;
+  }
+
   if (!result.count("subject")) {
-    cout << "Cannot start" << endl;
+    cerr << "Cannot start a session" << endl;
     return 1;
   } else {
-    Session::setSubject(result["subject"].as<string>());
+    // Verify subject existence
+    subject.setName(result["subject"].as<string>());
   }
-  if (result.count("duration")) {
-    Session::setDuration(result["duration"].as<int>());
+  if (!result.count("duration")) {
+    if (result.count("semester")) {
+      // Verify semester's existence
+      subject.setSemester(result["semester"].as<string>());
+    }
+    if (result.count("color")) {
+      // Verify if color is valid
+      subject.setColor(result["color"].as<string>());
+    }
+    if (result.count("goal")) {
+      // Verify if goal is valid
+      subject.setGoal(result["goal"].as<int>());
+    }
+    session.setSubject(subject);
+    return 0;
+  } else {
+    // Verify duration
+    session.setSubject(subject);
+    session.setGoalDuration(result["duration"].as<int>());
   }
 
   Database::open();
 
   thread th(ActivityMonitor::monitor);
   th.detach();
-  TUI::start();
+  TUI tui(session);
+  tui.start();
 
   return 0;
 }
