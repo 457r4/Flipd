@@ -1,4 +1,6 @@
 #include "core/Time.hpp"
+#include "core/Session.hpp"
+#include "data/Database.hpp"
 #include "ui/TUI.hpp"
 #include "utils/globals.hpp"
 #include <clocale>
@@ -8,6 +10,9 @@
 #include <vector>
 
 using namespace std;
+
+TUI* Time::tui_ = nullptr;
+Session* Time::session_ = nullptr;
 
 const string Time::zero_[5] = {"██████", "██  ██", "██  ██", "██  ██",
                                "██████"};
@@ -67,16 +72,21 @@ void Time::updateDrawing(int s) {
         content += " ";
     }
     int padSize =
-        (TUI::getWidth() - utf8::distance(content.begin(), content.end())) / 2;
+        (tui_->getWidth() - utf8::distance(content.begin(), content.end())) / 2;
     string padding(padSize, ' ');
     time_[ln] = padding + content;
   }
 }
 
-void Time::run(int m) {
-  for (int s = m * 60; s >= 0 && session_active; s--) {
+void Time::run(TUI *tui, Session *session) {
+  tui_ = tui;
+  session_ = session;
+  int s = 0;
+  for (s = session->getGoalDuration() * 60; s >= 0 && session_active; s--) {
     updateDrawing(s);
-    TUI::refreshTimeDrawing();
+    tui_->refreshTimeDrawing();
     sleep(1);
   }
+  session->setDuration(s);
+  Database::addSession(*session);
 }

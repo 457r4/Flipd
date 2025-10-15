@@ -31,8 +31,10 @@ int main(int argc, char *argv[]) {
   Session session;
   Subject subject;
 
-  if (result.count("semester")) {
-    // Add semester to database
+  Database::open();
+
+  if (!result.count("add") && result.count("semester")) {
+    Database::addSemester(result["semester"].as<string>());
     return 0;
   }
 
@@ -43,11 +45,11 @@ int main(int argc, char *argv[]) {
       cerr << "You must provide a semester" << endl;
       return 1;
     }
-    // Verify semester existence
+    subject.setName(result["add"].as<string>());
     subject.setSemester(result["semester"].as<string>());
     if (result.count("color")) subject.setColor(result["color"].as<string>());
     if (result.count("goal")) subject.setGoal(result["goal"].as<int>());
-    // Send the Subject to the database 
+    Database::addSubject(subject);
     return 0;
   }
 
@@ -75,11 +77,10 @@ int main(int argc, char *argv[]) {
     return 0;
   } else {
     // Verify duration
+    subject = Database::getSubjectByName(result["subject"].as<string>());
     session.setSubject(subject);
     session.setGoalDuration(result["duration"].as<int>());
   }
-
-  Database::open();
 
   thread th(ActivityMonitor::monitor);
   th.detach();

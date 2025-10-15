@@ -8,17 +8,20 @@ public:
   Subject() = default;
   ~Subject() = default;
 
+  int getId() const;
   std::string getName() const;
   std::string getSemester() const;
   std::string getColor() const;
   int getGoal() const;
 
+  void setId(int id_);
   void setName(std::string name);
   void setSemester(std::string semester);
   void setColor(std::string color);
   void setGoal(int goal);
 
 private:
+  int id_ = -1;
   std::string name_ = "";
   std::string semester_ = "";
   std::string color_ = "white";

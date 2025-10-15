@@ -1,6 +1,8 @@
 #ifndef TIME_H
 #define TIME_H
 
+#include "core/Session.hpp"
+#include "ui/TUI.hpp"
 #include <string>
 
 using namespace std;
@@ -11,9 +13,11 @@ public:
 
   static std::string time_[5];
 
-  static void run(int m);
+  static void run(TUI *tui, Session *session);
 
 private:
+  static TUI *tui_;
+  static Session *session_;
   static const std::string zero_[5];
   static const std::string one_[5];
   static const std::string two_[5];

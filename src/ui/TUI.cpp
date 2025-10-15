@@ -28,7 +28,7 @@ void TUI::start() {
 
   drawLayout();
   wattron(container, COLOR_PAIR(1));
-  thread th(Time::run, session_.getGoalDuration());
+  thread th(Time::run, this, &session_);
   th.detach();
 
   // popup = newwin(40, 40, 2, 2);
