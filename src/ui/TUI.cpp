@@ -80,14 +80,12 @@ void TUI::drawLayout() {
     init_pair(1, COLOR_MAGENTA, -1);
     break;
   case 6:
-    cout << "CYAN" << endl;
     init_pair(1, COLOR_CYAN, -1);
     break;
   case 7:
     init_pair(1, COLOR_WHITE, -1);
     break;
   default:
-    cout << "DEFAULT" << endl;
     init_pair(1, COLOR_WHITE, -1);
     break;
   };

@@ -94,7 +94,6 @@ void Time::run(TUI *tui, Session *session) {
     tui_->refreshTimeDrawing();
     sleep(1);
   }
-  quit();
 }
 
 void Time::quit() {
