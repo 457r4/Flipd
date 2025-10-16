@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
       "subject", "Latest semester subject will be used, use this option to change or set the subject's color, weekly goal or the duration of a session about to start", cxxopts::value<string>())(
       "semester", "Create a new semester (will group subjects)",
       cxxopts::value<string>())(
-      "color", "Give a color to the subject (white, green, red, blue, yellow, magenta, cyan, black)", cxxopts::value<string>())(
+      "color", "Give a color to the subject (white, green, red, blue, yellow, magenta, cyan, black)", cxxopts::value<int>())(
       "goal", "Set a weekly goal in hours for this subject", cxxopts::value<int>())(
       "duration", "Study session duration in minutes", cxxopts::value<int>());
   options.parse_positional({"subject", "duration"});
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     }
     subject.setName(result["add"].as<string>());
     subject.setSemester(result["semester"].as<string>());
-    if (result.count("color")) subject.setColor(result["color"].as<string>());
+    if (result.count("color")) subject.setColor(result["color"].as<int>());
     if (result.count("goal")) subject.setGoal(result["goal"].as<int>());
     Database::addSubject(subject);
     return 0;
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     }
     if (result.count("color")) {
       // Verify if color is valid
-      subject.setColor(result["color"].as<string>());
+      subject.setColor(result["color"].as<int>());
     }
     if (result.count("goal")) {
       // Verify if goal is valid

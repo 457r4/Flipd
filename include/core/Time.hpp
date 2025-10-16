@@ -14,10 +14,12 @@ public:
   static std::string time_[5];
 
   static void run(TUI *tui, Session *session);
+  static void quit();
 
 private:
   static TUI *tui_;
   static Session *session_;
+  static int s;
   static const std::string zero_[5];
   static const std::string one_[5];
   static const std::string two_[5];

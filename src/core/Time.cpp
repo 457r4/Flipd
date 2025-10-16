@@ -3,7 +3,10 @@
 #include "data/Database.hpp"
 #include "ui/TUI.hpp"
 #include "utils/globals.hpp"
+#include <chrono>
 #include <clocale>
+#include <ctime>
+#include <iostream>
 #include <string>
 #include <unistd.h>
 #include <utf8cpp/utf8.h>
@@ -78,15 +81,23 @@ void Time::updateDrawing(int s) {
   }
 }
 
+int Time::s = 0;
+
 void Time::run(TUI *tui, Session *session) {
   tui_ = tui;
   session_ = session;
-  int s = 0;
+  auto now = chrono::system_clock::now();
+  auto epoch_seconds = chrono::duration_cast<chrono::seconds>(now.time_since_epoch()).count();
+  session_->setDate(epoch_seconds);
   for (s = session->getGoalDuration() * 60; s >= 0 && session_active; s--) {
     updateDrawing(s);
     tui_->refreshTimeDrawing();
     sleep(1);
   }
-  session->setDuration(s);
-  Database::addSession(*session);
+  quit();
+}
+
+void Time::quit() {
+  session_->setDuration(s);
+  Database::addSession(*session_);
 }

@@ -4,7 +4,7 @@
 #include "core/Session.hpp"
 class TUI {
 public:
-  TUI(Session session);
+  TUI(const Session& session);
   ~TUI() = default;
 
   void start();

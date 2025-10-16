@@ -35,7 +35,7 @@ void Database::open() {
       "id INTEGER PRIMARY KEY AUTOINCREMENT,"
       "name TEXT NOT NULL,"
       "semester_id INTEGER NOT NULL,"
-      "color TEXT,"
+      "color INTEGER,"
       "goal INTEGER NOT NULL,"
       "FOREIGN KEY(semester_id) REFERENCES Semesters(id));";
   const char *sql_sessions =
@@ -86,7 +86,7 @@ void Database::addSubject(Subject subject) {
   sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
   sqlite3_bind_text(stmt, 1, subject.getName().c_str(), -1, SQLITE_TRANSIENT);
   sqlite3_bind_int(stmt, 2, getSemesterIdByName(subject.getSemester()));
-  sqlite3_bind_text(stmt, 3, subject.getColor().c_str(), -1, SQLITE_TRANSIENT);
+  sqlite3_bind_int(stmt, 3, subject.getColor());
   sqlite3_bind_int(stmt, 4, subject.getGoal());
 
   r = sqlite3_step(stmt);
@@ -95,7 +95,7 @@ void Database::addSubject(Subject subject) {
 }
 
 Subject Database::getSubjectByName(string subject_name) {
-  const char *sql = "SELECT id FROM Subjects WHERE name = ?;";
+  const char *sql = "SELECT id, name, color, goal FROM Subjects WHERE name = ?;";
   sqlite3_stmt *stmt;
   sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
   sqlite3_bind_text(stmt, 1, subject_name.c_str(), -1, SQLITE_TRANSIENT);
@@ -103,9 +103,8 @@ Subject Database::getSubjectByName(string subject_name) {
   if (sqlite3_step(stmt) == SQLITE_ROW) {
     subject.setId(sqlite3_column_int(stmt, 0));
     subject.setName(subject_name);
-    subject.setColor(
-        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 3)));
-    subject.setGoal(sqlite3_column_int(stmt, 4));
+    subject.setColor(sqlite3_column_int(stmt, 2));
+    subject.setGoal(sqlite3_column_int(stmt, 3));
   }
   sqlite3_finalize(stmt);
   return subject;
@@ -116,11 +115,15 @@ void Database::addSession(Session session) {
                     "duration) VALUES (?, ?, ?, ?);";
   sqlite3_stmt *stmt;
   sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-  sqlite3_bind_int(stmt, 1,
+  sqlite3_bind_int64(stmt, 1,
                    getSubjectByName(session.getSubject().getName()).getId());
   sqlite3_bind_int(stmt, 2, session.getDate());
   sqlite3_bind_int(stmt, 3, session.getGoalDuration());
   sqlite3_bind_int(stmt, 4, session.getDuration());
+
+  r = sqlite3_step(stmt);
+  verify("Error inserting session", (char *)sqlite3_errmsg(db));
+  sqlite3_finalize(stmt);
 }
 
 void Database::checkDatabaseExistence() {
