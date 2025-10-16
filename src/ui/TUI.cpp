@@ -101,11 +101,11 @@ void TUI::drawLayout() {
   refresh();
 
   if (container == nullptr) {
-    container = newwin(5, getWidth(), (getHeight() - 5) / 2, 0);
+    container = newwin(5, getWidth(), ((getHeight() - 5) / 2) + 2, 0);
     wattron(container, COLOR_PAIR(1));
   } else {
     wresize(container, 5, getWidth());
-    mvwin(container, (getHeight() - 5) / 2, 0);
+    mvwin(container, ((getHeight() - 5) / 2) + 2, 0);
   }
   wrefresh(container);
 }
