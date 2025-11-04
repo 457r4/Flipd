@@ -20,6 +20,9 @@ public:
   static void addSubject(Subject subject);
   static Subject getSubjectByName(std::string subject_name);
   static void addSession(Session session);
+  static int getLastSemesterId();
+  static std::vector<Subject> getSubjectsBySemesterId(int id);
+  static std::vector<Session> getSessionsBySubject(Subject subject, long long since);
 
 private:
   static const std::filesystem::path DB_DIR;

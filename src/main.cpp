@@ -5,6 +5,7 @@
 #include "ui/TUI.hpp"
 #include <iostream>
 #include <thread>
+#include "core/Progress.hpp"
 
 using namespace std;
 
@@ -18,7 +19,9 @@ int main(int argc, char *argv[]) {
       cxxopts::value<string>())(
       "color", "Give a color to the subject (white, green, red, blue, yellow, magenta, cyan, black)", cxxopts::value<int>())(
       "goal", "Set a weekly goal in hours for this subject", cxxopts::value<int>())(
-      "duration", "Study session duration in minutes", cxxopts::value<int>());
+      "duration", "Study session duration in minutes", cxxopts::value<int>())(
+      "progress", "Print your progress per subject"
+    );
   options.parse_positional({"subject", "duration"});
 
   auto result = options.parse(argc, argv);
@@ -32,6 +35,11 @@ int main(int argc, char *argv[]) {
   Subject subject;
 
   Database::open();
+
+  if (result.count("progress")) {
+    progress();
+    return 0;
+  }
 
   if (!result.count("add") && result.count("semester")) {
     Database::addSemester(result["semester"].as<string>());

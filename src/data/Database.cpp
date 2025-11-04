@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sqlite3.h>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -95,7 +96,8 @@ void Database::addSubject(Subject subject) {
 }
 
 Subject Database::getSubjectByName(string subject_name) {
-  const char *sql = "SELECT id, name, color, goal FROM Subjects WHERE name = ?;";
+  const char *sql =
+      "SELECT id, name, color, goal FROM Subjects WHERE name = ?;";
   sqlite3_stmt *stmt;
   sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
   sqlite3_bind_text(stmt, 1, subject_name.c_str(), -1, SQLITE_TRANSIENT);
@@ -116,7 +118,7 @@ void Database::addSession(Session session) {
   sqlite3_stmt *stmt;
   sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
   sqlite3_bind_int64(stmt, 1,
-                   getSubjectByName(session.getSubject().getName()).getId());
+                     getSubjectByName(session.getSubject().getName()).getId());
   sqlite3_bind_int(stmt, 2, session.getDate());
   sqlite3_bind_int(stmt, 3, session.getGoalDuration());
   sqlite3_bind_int(stmt, 4, session.getDuration());
@@ -124,6 +126,56 @@ void Database::addSession(Session session) {
   r = sqlite3_step(stmt);
   verify("Error inserting session", (char *)sqlite3_errmsg(db));
   sqlite3_finalize(stmt);
+}
+
+int Database::getLastSemesterId() {
+  const char *sql = "SELECT id FROM Semesters ORDER BY id DESC LIMIT 1;";
+  sqlite3_stmt *stmt;
+  sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+  int id = -1;
+  if (sqlite3_step(stmt) == SQLITE_ROW) {
+    id = sqlite3_column_int(stmt, 0);
+  }
+  sqlite3_finalize(stmt);
+  return id;
+}
+
+vector<Subject> Database::getSubjectsBySemesterId(int id) {
+  vector<Subject> subjects;
+  const char *sql = "SELECT * FROM Subjects WHERE semester_id = ?;";
+  sqlite3_stmt *stmt;
+  sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+  sqlite3_bind_int(stmt, 1, id);
+  while (sqlite3_step(stmt) == SQLITE_ROW) {
+    Subject subject;
+    subject.setId(sqlite3_column_int(stmt, 0));
+    subject.setName(
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1)));
+    subject.setColor(sqlite3_column_int(stmt, 3));
+    subject.setGoal(sqlite3_column_int(stmt, 4));
+    subjects.push_back(subject);
+  }
+  sqlite3_finalize(stmt);
+  return subjects;
+}
+
+vector<Session> Database::getSessionsBySubject(Subject subject, long long since) {
+  vector<Session> sessions;
+  const char *sql = "SELECT * FROM Sessions WHERE subject_id = ? AND date > ?;";
+  sqlite3_stmt *stmt;
+  sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+  sqlite3_bind_int(stmt, 1, subject.getId());
+  sqlite3_bind_int64(stmt, 2, since);
+  while (sqlite3_step(stmt) == SQLITE_ROW) {
+    Session session;
+    session.setSubject(subject);
+    session.setDate(sqlite3_column_int64(stmt, 2));
+    session.setGoalDuration(sqlite3_column_int(stmt, 3));
+    session.setDuration(sqlite3_column_int(stmt, 4));
+    sessions.push_back(session);
+  }
+  sqlite3_finalize(stmt);
+  return sessions;
 }
 
 void Database::checkDatabaseExistence() {

@@ -3,3 +3,5 @@ build
 Clock.cpp
 flipd
 numbers.txt
+colors_list.txt
+compile_flags.txt
