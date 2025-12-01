@@ -24,7 +24,7 @@ void TUI::start() {
   start_color();
   use_default_colors();
 
-  init_pair(2, COLOR_BLUE, -1);
+  init_pair(2, COLOR_GREEN, -1);
 
   drawLayout();
   wattron(container, COLOR_PAIR(2));
@@ -101,11 +101,11 @@ void TUI::drawLayout() {
   refresh();
 
   if (container == nullptr) {
-    container = newwin(5, getWidth(), ((getHeight() - 5) / 2) + 2, 0);
+    container = newwin(5, getWidth(), ((getHeight() - 8) / 2) + 3, 0);
     wattron(container, COLOR_PAIR(1));
   } else {
     wresize(container, 5, getWidth());
-    mvwin(container, ((getHeight() - 5) / 2) + 2, 0);
+    mvwin(container, ((getHeight() - 8) / 2) + 3, 0);
   }
   wrefresh(container);
 }

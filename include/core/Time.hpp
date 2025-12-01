@@ -4,6 +4,7 @@
 #include "core/Session.hpp"
 #include "ui/TUI.hpp"
 #include <string>
+#include <vector>
 
 using namespace std;
 
