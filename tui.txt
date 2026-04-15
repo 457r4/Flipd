@@ -138,22 +138,20 @@ void TUI::drawLayout() {
 
   // mvprintw(getHeight() - 2, 0, "%s", track);
 
-  bool hasTrack = track[0] != '\0' && track[0] != '\n';
-  int top_height = 2 + lines.size();
-  int timer_height = 5;
-  int bottom_height = hasTrack ? 2 : 0;
-  int free_height = getHeight() - top_height - bottom_height;
-
   if (container == nullptr) {
+    bool hasTrack = track[0] != '\0' && track[0] != '\n';
+    int top_height = 2 + lines.size();
+    int timer_height = 5;
+    int bottom_height = hasTrack ? 2 : 0;
+    int free_height = getHeight() - top_height - bottom_height;
     // if (free_height < timer_height + 2) {
     //   free_height = timer_height + 2;
     // }
-    container =
-        newwin(5, getWidth(), top_height + (free_height - timer_height) / 2, 0);
+    container = newwin(5, getWidth(), top_height + (free_height - timer_height) / 2, 0);
     wattron(container, COLOR_PAIR(1));
   } else {
     wresize(container, 5, getWidth());
-    mvwin(container, top_height + (free_height - timer_height) / 2, 0);
+    mvwin(container, ((getHeight() - 8) / 2) + 3, 0);
   }
   wrefresh(container);
 }
@@ -178,7 +176,7 @@ void TUI::listener() {
     }
     fgets(track, sizeof(track), pipe);
     pclose(pipe);
-    if (memcmp(track, tmp, 512) != 0) {
+    if (track[0] != '\0' && memcmp(track, tmp, 512) != 0) {
       refreshTrack();
     }
     sleep(1);
@@ -190,7 +188,7 @@ void TUI::refreshTrack() {
   string content = " 󰎇 " + track_str + " ";
 
   int y = getHeight() - 2;
-  int x = (getWidth() - utf8::distance(content.begin(), content.end()) - 2) / 2;
+  int x = (getWidth() - utf8::distance(content.begin(), content.end()) - 2 ) / 2;
   move(y, x);
   clrtoeol();
 

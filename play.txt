@@ -1,0 +1,21 @@
+#!/data/data/com.termux/files/usr/bin/zsh
+
+source "$HOME/Scripts/lib/styles.sh"
+
+round_left=""
+round_right=""
+icon="󰎇"
+track="$(termux-notification-list | jq -r '.[] | select(.packageName=="com.aspiro.tidal") | "\(.title) - \(.content)"')"
+
+padding=3
+max=$(( COLUMNS - 4 - padding*2 ))
+
+if (( ${#track} >= max )); then
+  max=$(( max - 3 ))
+  track="${track[1,max]}"
+  track+="..."
+fi
+
+# center "${BLACK_BRIGHT}${round_left}${RESET}${BLACK_BRIGHT_BG}${WHITE_BRIGHT}${icon} ${track}${RESET}${BLACK_BRIGHT}${round_right}${RESEST}"
+
+echo "$track"

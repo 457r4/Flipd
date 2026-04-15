@@ -15,6 +15,8 @@ public:
 private:
   Session session_;
   void drawLayout();
+  void listener();
+  void refreshTrack();
 };
 
 #endif // !TUI
