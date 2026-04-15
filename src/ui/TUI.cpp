@@ -191,7 +191,7 @@ void TUI::refreshTrack() {
 
   int y = getHeight() - 2;
   int x = (getWidth() - utf8::distance(content.begin(), content.end()) - 2) / 2;
-  move(y, x);
+  move(y, 0);
   clrtoeol();
 
   attron(COLOR_PAIR(10));
