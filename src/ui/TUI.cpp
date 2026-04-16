@@ -136,8 +136,6 @@ void TUI::drawLayout() {
   attroff(COLOR_PAIR(1));
   refresh();
 
-  // mvprintw(getHeight() - 2, 0, "%s", track);
-
   bool hasTrack = track[0] != '\0' && track[0] != '\n';
   int top_height = 2 + lines.size();
   int timer_height = 5;
@@ -176,7 +174,9 @@ void TUI::listener() {
       log("Error executing playerctl");
       continue;
     }
-    fgets(track, sizeof(track), pipe);
+    if (fgets(track, sizeof(track), pipe) == NULL) {
+      track[0] = '\0';
+    }
     pclose(pipe);
     if (memcmp(track, tmp, 512) != 0) {
       refreshTrack();
@@ -186,6 +186,8 @@ void TUI::listener() {
 }
 
 void TUI::refreshTrack() {
+  drawLayout();
+
   string track_str(track);
   string content = " 󰎇 " + track_str + " ";
 
@@ -193,6 +195,10 @@ void TUI::refreshTrack() {
   int x = (getWidth() - utf8::distance(content.begin(), content.end()) - 2) / 2;
   move(y, 0);
   clrtoeol();
+
+  if (track[0] == '\0') {
+    return;
+  }
 
   attron(COLOR_PAIR(10));
   mvprintw(y, x++, "");
