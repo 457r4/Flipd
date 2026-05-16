@@ -70,3 +70,34 @@ void progress(int when) {
     printf("\033[0m\n");
   }
 }
+
+void total(int when) {
+  int semester_id = Database::getLastSemesterId();
+  vector<Subject> subjects = Database::getSubjectsBySemesterId(semester_id);
+  std::time_t since_when = since(when);
+
+  int total_time = 0;
+  for (Subject subject : subjects) {
+    vector<Session> sessions =
+        Database::getSessionsBySubject(subject, since_when);
+    for (Session session : sessions) {
+      if (session.getDate() >= since_when + week_duration)
+        continue;
+      if (session.getDuration() == -1) {
+        total_time += session.getGoalDuration() * 60;
+      } else {
+        total_time += (session.getGoalDuration() * 60 - session.getDuration());
+      }
+    }
+  }
+
+  int hours = total_time / 3600;
+  int minutes = (total_time % 3600) / 60;
+  int seconds = total_time % 60;
+
+  (when == 0)
+      ? printf("You've studied \033[97m%02d:%02d:%02d\033[0m this week\n", hours,
+               minutes, seconds)
+      : printf("You've studied \033[97m%02d:%02d:%02d\033[0m %d weeks ago\n",
+               hours, minutes, seconds, abs(when));
+}

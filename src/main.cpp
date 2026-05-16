@@ -20,8 +20,8 @@ int main(int argc, char *argv[]) {
       "color", "Give a color to the subject (white, green, red, blue, yellow, magenta, cyan, black)", cxxopts::value<int>())(
       "goal", "Set a weekly goal in hours for this subject", cxxopts::value<int>())(
       "duration", "Study session duration in minutes", cxxopts::value<int>())(
-      "p,progress", "Print your progress per subject, no arguments provided defaults to current week", cxxopts::value<int>()->implicit_value("0")
-      // "total", "Print the total time studied this week, no arguments provided defaults to current week", cxxopts::value<string>())(
+      "p,progress", "Print your progress per subject, no arguments provided defaults to current week", cxxopts::value<int>()->implicit_value("0"))(
+      "total", "Print the total time studied this week, no arguments provided defaults to current week", cxxopts::value<int>()->implicit_value("0")
       // "s, streak", "Print your streak")(
       // "daily", "Print your statistics by day and hour"
     );
@@ -44,10 +44,10 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  // if (result.count("total")) {
-  //   total(result["total"].as<string>());
-  //   return 0;
-  // }
+  if (result.count("total")) {
+    total(result["total"].as<int>());
+    return 0;
+  }
 
   if (!result.count("add") && result.count("semester")) {
     Database::addSemester(result["semester"].as<string>());
