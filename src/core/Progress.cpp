@@ -1,8 +1,11 @@
 #include "core/Progress.hpp"
 #include "core/Subject.hpp"
 #include "data/Database.hpp"
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
+#include <ctime>
 #include <iostream>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -96,8 +99,71 @@ void total(int when) {
   int seconds = total_time % 60;
 
   (when == 0)
-      ? printf("You've studied \033[97m%02d:%02d:%02d\033[0m this week\n", hours,
-               minutes, seconds)
+      ? printf("You've studied \033[97m%02d:%02d:%02d\033[0m this week\n",
+               hours, minutes, seconds)
       : printf("You've studied \033[97m%02d:%02d:%02d\033[0m %d weeks ago\n",
                hours, minutes, seconds, abs(when));
+}
+
+void streak() {
+  std::time_t day_duration = 86400;
+  std::time_t now = std::time(nullptr);
+  std::tm local_tm = *std::localtime(&now);
+  local_tm.tm_hour = 0;
+  local_tm.tm_min = 0;
+  local_tm.tm_sec = 0;
+  std::time_t day_start = std::mktime(&local_tm);
+
+  int semester_id = Database::getLastSemesterId();
+  vector<Subject> subjects = Database::getSubjectsBySemesterId(semester_id);
+
+  int streak = 0;
+  int time_today = 0;
+
+  vector<long long> session_dates;
+
+  for (Subject subject : subjects) {
+    vector<Session> sessions = Database::getSessionsBySubject(subject, 0);
+    for (Session session : sessions) {
+      if (session.getDate() >= day_start) {
+        if (session.getDuration() == -1) {
+          time_today += session.getGoalDuration() * 60;
+        } else {
+          time_today +=
+              (session.getGoalDuration() * 60 - session.getDuration());
+        }
+      }
+      session_dates.push_back(session.getDate());
+    }
+  }
+
+  int i = 0;
+  bool break_streak = false;
+  while (!break_streak) {
+    std::time_t streak_start = day_start - i * day_duration;
+    break_streak = !std::any_of(session_dates.begin(), session_dates.end(),
+                                [streak_start, day_duration](long long date) {
+                                  return streak_start <= date &&
+                                         date < streak_start + day_duration;
+                                });
+    streak++;
+    i++;
+  }
+
+  struct winsize w;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+  int width = w.ws_col;
+
+  int hours = time_today / 3600;
+  int minutes = (time_today % 3600) / 60;
+
+  char left[256], right[256], right_raw[256];
+  snprintf(left, sizeof(left), "today %02d:%02d", hours, minutes);
+  snprintf(right, sizeof(right), "\033[90m\033[0m\033[100m%dd 󰈸\033[0m\033[90m\033[0m", streak);
+  snprintf(right_raw, sizeof(right_raw), "%dd 󰈸", streak);
+
+  printf(" %s─────────────────────────%s\n", "╭", "╮");
+  printf(" │ %-*s%s │\n", 30 - (int)(strlen(right_raw)), left, right);
+  printf(" %s─────────────────────────%s\n", "╰", "╯");
+  // printf(" %-*s%s\n", 10, "╰", "╯");
 }
