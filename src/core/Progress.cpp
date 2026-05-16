@@ -1,6 +1,8 @@
 #include "core/Progress.hpp"
 #include "core/Subject.hpp"
 #include "data/Database.hpp"
+#include <cmath>
+#include <cstdio>
 #include <iostream>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -28,31 +30,41 @@ void bar(int goal, int prog) {
   printf("%*d%%\n", 4, (int)(percentage * 100));
 }
 
-long long since() {
+std::time_t week_duration = 604800;
+
+long long since(int when) {
+  when = abs(when);
   std::time_t now = std::time(nullptr);
   std::tm local_tm = *std::localtime(&now);
   local_tm.tm_hour = 0;
   local_tm.tm_min = 0;
   local_tm.tm_sec = 0;
   local_tm.tm_mday -= local_tm.tm_wday;
-  std::time_t week_start = std::mktime(&local_tm); // 7
-  return week_start;
+  std::time_t week_start = std::mktime(&local_tm);
+  return week_start - (long long)when * week_duration;
 }
 
-void progress() {
+void progress(int when) {
   int semester_id = Database::getLastSemesterId();
   vector<Subject> subjects = Database::getSubjectsBySemesterId(semester_id);
+  std::time_t since_when = since(when);
+
   for (Subject subject : subjects) {
-    printf(" %s [%d]\n", subject.getName().c_str(), subject.getGoal());
-    vector<Session> sessions = Database::getSessionsBySubject(subject, since());
+    vector<Session> sessions =
+        Database::getSessionsBySubject(subject, since_when);
+
     int total_time = 0;
     for (Session session : sessions) {
+      if (session.getDate() >= since_when + week_duration)
+        continue;
       if (session.getDuration() == -1) {
         total_time += session.getGoalDuration() * 60;
       } else {
         total_time += (session.getGoalDuration() * 60 - session.getDuration());
       }
     }
+
+    printf(" %s [%d]\n", subject.getName().c_str(), subject.getGoal());
     printf("\033[3%dm", subject.getColor());
     bar(subject.getGoal() * 3600, total_time);
     printf("\033[0m\n");
