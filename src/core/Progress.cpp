@@ -137,7 +137,9 @@ void streak() {
     }
   }
 
-  int i = 0;
+  if (time_today > 0) streak++;
+
+  int i = 1;
   bool break_streak = false;
   while (!break_streak) {
     std::time_t streak_start = day_start - i * day_duration;
@@ -158,12 +160,14 @@ void streak() {
   int minutes = (time_today % 3600) / 60;
 
   char left[256], right[256], right_raw[256];
-  snprintf(left, sizeof(left), "today %02d:%02d", hours, minutes);
+  snprintf(left, sizeof(left), "today: %02dh%02dm", hours, minutes);
   snprintf(right, sizeof(right), "\033[90m\033[0m\033[100m%dd 󰈸\033[0m\033[90m\033[0m", streak);
   snprintf(right_raw, sizeof(right_raw), "%dd 󰈸", streak);
 
-  printf(" %s─────────────────────────%s\n", "╭", "╮");
-  printf(" │ %-*s%s │\n", 30 - (int)(strlen(right_raw)), left, right);
-  printf(" %s─────────────────────────%s\n", "╰", "╯");
+  printf("%s──────────────────────────────%s\n", "╭", "╮");
+  printf("│ %-*s%s │\n", 35 - (int)(strlen(right_raw)), left, right);
+  // printf("%s──────────────────────────────%s\n", "├", "┤");
+  // printf("%s  Su  Mo  Tu  We  Th  Fr  Sa  %s\n", "│", "│");
+  printf("%s──────────────────────────────%s\n", "╰", "╯");
   // printf(" %-*s%s\n", 10, "╰", "╯");
 }
