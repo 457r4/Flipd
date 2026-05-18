@@ -161,11 +161,11 @@ void streak() {
 
   char left[256], right[256], right_raw[256];
   snprintf(left, sizeof(left), "today: %02dh%02dm", hours, minutes);
-  snprintf(right, sizeof(right), "\033[90m\033[0m\033[100m%dd 󰈸\033[0m\033[90m\033[0m", streak);
-  snprintf(right_raw, sizeof(right_raw), "%dd 󰈸", streak);
+  snprintf(right, sizeof(right), "\033[90m\033[0m\033[100m %dd  \033[0m\033[90m\033[0m", streak);
+  snprintf(right_raw, sizeof(right_raw), " %dd  ", streak);
 
   printf("%s──────────────────────────────%s\n", "╭", "╮");
-  printf("│ %-*s%s │\n", 35 - (int)(strlen(right_raw)), left, right);
+  printf("│ %-*s%s │\n", 34 - (int)(strlen(right_raw)), left, right);
   printf("%s──────────────────────────────%s\n", "├", "┤");
   printf("%s  Su  Mo  Tu  We  Th  Fr  Sa  %s\n", "│", "│");
   printf("%s──────────────────────────────%s\n", "╰", "╯");
