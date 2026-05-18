@@ -148,7 +148,7 @@ void streak() {
                                   return streak_start <= date &&
                                          date < streak_start + day_duration;
                                 });
-    streak++;
+    if (!break_streak) streak++;
     i++;
   }
 
@@ -166,8 +166,8 @@ void streak() {
 
   printf("%s──────────────────────────────%s\n", "╭", "╮");
   printf("│ %-*s%s │\n", 35 - (int)(strlen(right_raw)), left, right);
-  // printf("%s──────────────────────────────%s\n", "├", "┤");
-  // printf("%s  Su  Mo  Tu  We  Th  Fr  Sa  %s\n", "│", "│");
+  printf("%s──────────────────────────────%s\n", "├", "┤");
+  printf("%s  Su  Mo  Tu  We  Th  Fr  Sa  %s\n", "│", "│");
   printf("%s──────────────────────────────%s\n", "╰", "╯");
   // printf(" %-*s%s\n", 10, "╰", "╯");
 }
